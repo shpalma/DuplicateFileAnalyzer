@@ -3,7 +3,8 @@ namespace FilesDuplicatesAnalyzer
    public partial class FrmMain : Form
    {
 
-	  private string[] FileExtensions = { "mp4", "avi", "mkv" };
+	  //private string[] FileExtensions = { "mp4", "avi", "mkv" };
+	  private string[] FileExtensions = { "jpg", "png" };
 	  public SearchOption SearchOptionType = SearchOption.TopDirectoryOnly;
 
 	  public FrmMain()
