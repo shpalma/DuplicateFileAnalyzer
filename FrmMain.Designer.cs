@@ -28,6 +28,7 @@
 	  /// </summary>
 	  private void InitializeComponent()
 	  {
+		 components = new System.ComponentModel.Container();
 		 grpbSetUp = new GroupBox();
 		 lblDuplicatedFilesResult = new Label();
 		 lblDuplicatedFiles = new Label();
@@ -37,7 +38,12 @@
 		 chkbSubFolders = new CheckBox();
 		 btnSelectFolder = new Button();
 		 lblSelectFolder = new Label();
+		 grpbDupFiles = new GroupBox();
+		 tlpContenedor = new TableLayoutPanel();
+		 imglDupFiles = new ImageList(components);
+		 imageList1 = new ImageList(components);
 		 grpbSetUp.SuspendLayout();
+		 grpbDupFiles.SuspendLayout();
 		 SuspendLayout();
 		 // 
 		 // grpbSetUp
@@ -132,16 +138,59 @@
 		 lblSelectFolder.TabIndex = 0;
 		 lblSelectFolder.Text = "Folder to Analyze: ";
 		 // 
+		 // grpbDupFiles
+		 // 
+		 grpbDupFiles.Controls.Add(tlpContenedor);
+		 grpbDupFiles.Location = new Point(11, 281);
+		 grpbDupFiles.Name = "grpbDupFiles";
+		 grpbDupFiles.Size = new Size(906, 260);
+		 grpbDupFiles.TabIndex = 1;
+		 grpbDupFiles.TabStop = false;
+		 grpbDupFiles.Text = "Duplicated files";
+		 // 
+		 // tlpContenedor
+		 // 
+		 tlpContenedor.AutoScroll = true;
+		 tlpContenedor.ColumnCount = 4;
+		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+		 tlpContenedor.Location = new Point(6, 30);
+		 tlpContenedor.Name = "tlpContenedor";
+		 tlpContenedor.RowCount = 5;
+		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+		 tlpContenedor.Size = new Size(777, 206);
+		 tlpContenedor.TabIndex = 0;
+		 // 
+		 // imglDupFiles
+		 // 
+		 imglDupFiles.ColorDepth = ColorDepth.Depth8Bit;
+		 imglDupFiles.ImageSize = new Size(16, 16);
+		 imglDupFiles.TransparentColor = Color.Transparent;
+		 // 
+		 // imageList1
+		 // 
+		 imageList1.ColorDepth = ColorDepth.Depth8Bit;
+		 imageList1.ImageSize = new Size(16, 16);
+		 imageList1.TransparentColor = Color.Transparent;
+		 // 
 		 // FrmMain
 		 // 
 		 AutoScaleDimensions = new SizeF(10F, 25F);
 		 AutoScaleMode = AutoScaleMode.Font;
 		 ClientSize = new Size(930, 600);
+		 Controls.Add(grpbDupFiles);
 		 Controls.Add(grpbSetUp);
 		 Name = "FrmMain";
 		 Text = "Files Duplicates Analyzer";
 		 grpbSetUp.ResumeLayout(false);
 		 grpbSetUp.PerformLayout();
+		 grpbDupFiles.ResumeLayout(false);
 		 ResumeLayout(false);
 	  }
 
@@ -156,5 +205,9 @@
 	  private Button btnResetSetUp;
 	  private Label lblDuplicatedFilesResult;
 	  private Label lblDuplicatedFiles;
+	  private GroupBox grpbDupFiles;
+	  private ImageList imglDupFiles;
+	  private TableLayoutPanel tlpContenedor;
+	  private ImageList imageList1;
    }
 }
