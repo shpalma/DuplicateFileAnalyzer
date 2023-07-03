@@ -28,7 +28,6 @@
 	  /// </summary>
 	  private void InitializeComponent()
 	  {
-		 components = new System.ComponentModel.Container();
 		 grpbSetUp = new GroupBox();
 		 lblDuplicatedFilesResult = new Label();
 		 lblDuplicatedFiles = new Label();
@@ -39,11 +38,14 @@
 		 btnSelectFolder = new Button();
 		 lblSelectFolder = new Label();
 		 grpbDupFiles = new GroupBox();
-		 tlpContenedor = new TableLayoutPanel();
-		 imglDupFiles = new ImageList(components);
-		 imageList1 = new ImageList(components);
+		 dgvDuplicate = new DataGridView();
+		 chkbDeleteDuplicated = new CheckBox();
+		 ssStatus = new StatusStrip();
+		 tspbStatus = new ToolStripProgressBar();
 		 grpbSetUp.SuspendLayout();
 		 grpbDupFiles.SuspendLayout();
+		 ((System.ComponentModel.ISupportInitialize)dgvDuplicate).BeginInit();
+		 ssStatus.SuspendLayout();
 		 SuspendLayout();
 		 // 
 		 // grpbSetUp
@@ -140,58 +142,72 @@
 		 // 
 		 // grpbDupFiles
 		 // 
-		 grpbDupFiles.Controls.Add(tlpContenedor);
+		 grpbDupFiles.Controls.Add(dgvDuplicate);
 		 grpbDupFiles.Location = new Point(11, 281);
 		 grpbDupFiles.Name = "grpbDupFiles";
-		 grpbDupFiles.Size = new Size(906, 260);
+		 grpbDupFiles.Size = new Size(906, 417);
 		 grpbDupFiles.TabIndex = 1;
 		 grpbDupFiles.TabStop = false;
 		 grpbDupFiles.Text = "Duplicated files";
 		 // 
-		 // tlpContenedor
+		 // dgvDuplicate
 		 // 
-		 tlpContenedor.AutoScroll = true;
-		 tlpContenedor.ColumnCount = 4;
-		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-		 tlpContenedor.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-		 tlpContenedor.Location = new Point(6, 30);
-		 tlpContenedor.Name = "tlpContenedor";
-		 tlpContenedor.RowCount = 5;
-		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-		 tlpContenedor.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-		 tlpContenedor.Size = new Size(777, 206);
-		 tlpContenedor.TabIndex = 0;
+		 dgvDuplicate.AllowUserToAddRows = false;
+		 dgvDuplicate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+		 dgvDuplicate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+		 dgvDuplicate.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+		 dgvDuplicate.Location = new Point(6, 30);
+		 dgvDuplicate.Name = "dgvDuplicate";
+		 dgvDuplicate.RowHeadersWidth = 62;
+		 dgvDuplicate.RowTemplate.Height = 33;
+		 dgvDuplicate.Size = new Size(894, 375);
+		 dgvDuplicate.TabIndex = 0;
 		 // 
-		 // imglDupFiles
+		 // chkbDeleteDuplicated
 		 // 
-		 imglDupFiles.ColorDepth = ColorDepth.Depth8Bit;
-		 imglDupFiles.ImageSize = new Size(16, 16);
-		 imglDupFiles.TransparentColor = Color.Transparent;
+		 chkbDeleteDuplicated.AutoSize = true;
+		 chkbDeleteDuplicated.Location = new Point(17, 704);
+		 chkbDeleteDuplicated.Name = "chkbDeleteDuplicated";
+		 chkbDeleteDuplicated.Size = new Size(184, 29);
+		 chkbDeleteDuplicated.TabIndex = 1;
+		 chkbDeleteDuplicated.Text = "Delete duplicated?";
+		 chkbDeleteDuplicated.UseVisualStyleBackColor = true;
 		 // 
-		 // imageList1
+		 // ssStatus
 		 // 
-		 imageList1.ColorDepth = ColorDepth.Depth8Bit;
-		 imageList1.ImageSize = new Size(16, 16);
-		 imageList1.TransparentColor = Color.Transparent;
+		 ssStatus.ImageScalingSize = new Size(24, 24);
+		 ssStatus.Items.AddRange(new ToolStripItem[] { tspbStatus });
+		 ssStatus.Location = new Point(0, 742);
+		 ssStatus.Name = "ssStatus";
+		 ssStatus.Size = new Size(930, 28);
+		 ssStatus.TabIndex = 2;
+		 // 
+		 // tspbStatus
+		 // 
+		 tspbStatus.Name = "tspbStatus";
+		 tspbStatus.Size = new Size(150, 20);
 		 // 
 		 // FrmMain
 		 // 
 		 AutoScaleDimensions = new SizeF(10F, 25F);
 		 AutoScaleMode = AutoScaleMode.Font;
-		 ClientSize = new Size(930, 600);
+		 ClientSize = new Size(930, 770);
+		 Controls.Add(ssStatus);
+		 Controls.Add(chkbDeleteDuplicated);
 		 Controls.Add(grpbDupFiles);
 		 Controls.Add(grpbSetUp);
+		 MaximizeBox = false;
+		 MinimizeBox = false;
 		 Name = "FrmMain";
 		 Text = "Files Duplicates Analyzer";
 		 grpbSetUp.ResumeLayout(false);
 		 grpbSetUp.PerformLayout();
 		 grpbDupFiles.ResumeLayout(false);
+		 ((System.ComponentModel.ISupportInitialize)dgvDuplicate).EndInit();
+		 ssStatus.ResumeLayout(false);
+		 ssStatus.PerformLayout();
 		 ResumeLayout(false);
+		 PerformLayout();
 	  }
 
 	  #endregion
@@ -206,8 +222,9 @@
 	  private Label lblDuplicatedFilesResult;
 	  private Label lblDuplicatedFiles;
 	  private GroupBox grpbDupFiles;
-	  private ImageList imglDupFiles;
-	  private TableLayoutPanel tlpContenedor;
-	  private ImageList imageList1;
+	  private DataGridView dgvDuplicate;
+	  private CheckBox chkbDeleteDuplicated;
+	  private StatusStrip ssStatus;
+	  private ToolStripProgressBar tspbStatus;
    }
 }

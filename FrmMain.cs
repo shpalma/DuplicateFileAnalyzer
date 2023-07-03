@@ -1,15 +1,16 @@
 using System.Diagnostics;
+using System.Drawing;
 using System.Diagnostics.Eventing.Reader;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
 
 namespace FilesDuplicatesAnalyzer
 {
    public partial class FrmMain : Form
    {
-
-	  //private string[] FileExtensions = { "mp4", "avi", "mkv" };
 	  private string[] FileExtensions = { "jpg", "png" };
 	  public SearchOption SearchOptionType = SearchOption.TopDirectoryOnly;
+	  public string[] duplicatedFiles;
 
 	  public FrmMain()
 	  {
@@ -22,69 +23,116 @@ namespace FilesDuplicatesAnalyzer
 		 {
 			using var fbd = new FolderBrowserDialog();
 			DialogResult result = fbd.ShowDialog();
+			int counter = 0;
 
 			if(result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
 			{
-			   #region old code
-			   //string[] files = Directory.GetFiles(fbd.SelectedPath);
-
-			   //if(files.Length >= 1)
-			   //{
-			   //   DuplicatesAnalyzer analyzer = new();
-			   //   string[] duplicateFiles = analyzer.FindDuplicateFiles(fbd.SelectedPath, FileExtensions, SearchOptionType);
-			   //}
-			   #endregion
+			   lblFilesInFolderResult.Text = Directory.GetFiles(fbd.SelectedPath, "*.*").Length.ToString();
 
 			   // images
 			   DuplicatesAnalyzer analyzer = new();
-			   string[] duplicatedFiles = analyzer.AlanyzeImages(fbd.SelectedPath, "jpg", SearchOptionType);
+			   duplicatedFiles = analyzer.AlanyzeImages(fbd.SelectedPath, "jpg", SearchOptionType);
+
+			   // minimos y máximos de toolstrip
+			   tspbStatus.Minimum = 0;
+			   tspbStatus.Minimum = duplicatedFiles.Length;
+
 
 			   if(duplicatedFiles.Length >= 1)
 			   {
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" {duplicatedFiles.Length} files found");
 
-				  int row = tlpContenedor.RowCount;
-				  tlpContenedor.Dock = DockStyle.Fill; // Rellenar todo el espacio del formulario
-				  tlpContenedor.AutoScroll = true; // Habilitar el desplazamiento automático si hay muchas imágenes
-				  Panel panel = new Panel();
-				  panel.AutoScroll = true;
+				  // Ajustar automáticamente el ancho de las columnas al contenido
+				  dgvDuplicate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
-
-				  foreach(string archivo in duplicatedFiles)
+				  // Crear la columna "Número"
+				  dgvDuplicate.Columns.Add("NumberColumn", "N°");
+				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
-					 string[] rutas = archivo.Split('|'); // Separar las rutas
+					 dgvDuplicate.Rows.Add((i + 1).ToString());
+				  }
 
-					 if(rutas.Length == 2)
+				  // Crear la columna "Nombre Original"
+				  dgvDuplicate.Columns.Add("OriginalNameColumn", "Nombre Original");
+				  for(int i = 0; i < duplicatedFiles.Length; i++)
+				  {
+					 string originalName = Path.GetFileName(duplicatedFiles[i].Split('|')[0]);
+					 dgvDuplicate.Rows[i].Cells["OriginalNameColumn"].Value = originalName;
+				  }
+
+				  // Crear la columna "Imagen Original"
+				  dgvDuplicate.Columns.Add("OriginalImageColumn", "Imagen Original");
+				  for(int i = 0; i < duplicatedFiles.Length; i++)
+				  {
+					 string originalImagePath = duplicatedFiles[i].Split('|')[0];
+					 Image resizedImage = GetResizedImage(originalImagePath.Trim(), 120, 150);
+					 if(resizedImage != null)
 					 {
-						PictureBox pictureBox = new PictureBox();
-						pictureBox.ImageLocation = rutas[0];
-						//pictureBox.SizeMode = PictureBoxSizeMode.AutoSize;
-						pictureBox.Size = new Size(180, 200);
-						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Original: {rutas[0]}");
-
-
-						PictureBox pictureBoxDuplicado = new PictureBox();
-						pictureBoxDuplicado.ImageLocation = rutas[1];
-						//pictureBoxDuplicado.SizeMode = PictureBoxSizeMode.AutoSize;
-						pictureBoxDuplicado.Size = new Size(180, 200);
-						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Duplicated: {rutas[1]}");
-
-						tlpContenedor.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // Agregar una nueva fila automáticamente
-
-						tlpContenedor.Controls.Add(pictureBox, 0, row);
-						tlpContenedor.Controls.Add(pictureBoxDuplicado, 1, row);
-
-						row++;
-
+						DataGridViewImageCell cell = new DataGridViewImageCell();
+						cell.Value = resizedImage;
+						dgvDuplicate.Rows[i].Cells["OriginalImageColumn"] = cell;
 					 }
 				  }
 
-				  panel.Controls.Add(tlpContenedor); // Agregar el TableLayoutPanel al panel
-				  panel.Dock = DockStyle.Fill; // Rellenar todo el espacio del panel
+				  // Crear la columna "Nombre Duplicado"
+				  dgvDuplicate.Columns.Add("DuplicateNameColumn", "Nombre Duplicado");
+				  for(int i = 0; i < duplicatedFiles.Length; i++)
+				  {
+					 string duplicateName = Path.GetFileName(duplicatedFiles[i].Split('|')[1]);
+					 dgvDuplicate.Rows[i].Cells["DuplicateNameColumn"].Value = duplicateName;
+				  }
 
-				  grpbDupFiles.Controls.Add(panel); // Agregar el panel al GroupBox
+				  // Crear la columna "Imagen Duplicada"
+				  dgvDuplicate.Columns.Add("DuplicateImageColumn", "Imagen Duplicada");
+				  for(int i = 0; i < duplicatedFiles.Length; i++)
+				  {
+					 string duplicateImagePath = duplicatedFiles[i].Split('|')[1];
+					 Image resizedImage = GetResizedImage(duplicateImagePath.Trim(), 120, 150);
+					 if(resizedImage != null)
+					 {
+						DataGridViewImageCell cell = new DataGridViewImageCell();
+						cell.Value = resizedImage;
+						dgvDuplicate.Rows[i].Cells["DuplicateImageColumn"] = cell;
+					 }
+				  }
 
-				  tlpContenedor.Parent = panel;
+				  foreach(DataGridViewRow row in dgvDuplicate.Rows)
+				  {
+					 row.Height = 202;
+				  }
+
+				  //// Crear la columna "Seleccione" con checkboxes
+				  //dgvDuplicate.Columns.Add("SelectColumn", "Seleccione");
+				  //for(int i = 0; i < duplicatedFiles.Length; i++)
+				  //{
+				  //DataGridViewCheckBoxCell cell = new DataGridViewCheckBoxCell();
+				  //dgvDuplicate.Rows[i].Cells["SelectColumn"] = cell;
+				  //}
+
+				  //// Manejar el evento CellContentClick para almacenar las imágenes duplicadas seleccionadas
+				  //List<string> selectedImages = new List<string>();
+
+				  //// Manejar el evento CellValueChanged para almacenar las imágenes duplicadas seleccionadas
+				  //dgvDuplicate.CellValueChanged += (sender, e) =>
+				  //{
+				  //if(e.ColumnIndex == dgvDuplicate.Columns["SelectColumn"].Index && e.RowIndex >= 0)
+				  //{
+				  //DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)dgvDuplicate.Rows[e.RowIndex].Cells["SelectColumn"];
+				  //bool isChecked = (bool)cell.Value;
+
+				  //if(isChecked)
+				  //{
+				  //   string duplicateImagePath = duplicatedFiles[e.RowIndex].Split('|')[1];
+				  //   selectedImages.Add(duplicateImagePath);
+				  //}
+				  //else
+				  //{
+				  //   string duplicateImagePath = duplicatedFiles[e.RowIndex].Split('|')[1];
+				  //   selectedImages.Remove(duplicateImagePath);
+				  //}
+				  //}
+				  //};
+
 			   }
 			   else
 			   {
@@ -92,18 +140,41 @@ namespace FilesDuplicatesAnalyzer
 			   }
 			}
 		 }
+		 catch(FormatException fex)
+		 {
+			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $"Button_Click: FormatException  {fex.Message}");
+		 }
 		 catch(Exception ex)
 		 {
-			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception(general): {ex.Message}");
+			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $"Button_Click: Exception  {ex.Message}");
+		 }
+	  }
+
+	  private Image GetResizedImage(string imagePath, int width, int height)
+	  {
+		 try
+		 {
+			using(Image originalImage = Image.FromFile(imagePath))
+			{
+			   Bitmap resizedImage = new Bitmap(width, height);
+			   using(Graphics graphics = Graphics.FromImage(resizedImage))
+			   {
+				  graphics.DrawImage(originalImage, 0, 0, width, height);
+			   }
+			   return resizedImage;
+			}
+		 }
+		 catch(Exception ex)
+		 {
+			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $"GetResizedImage: Error al redimensionar la imagen ({ex.Message})");
+			return null;
 		 }
 	  }
 
 	  private void chkbSubFolders_CheckedChanged(object sender, EventArgs e)
 	  {
 		 if(chkbSubFolders.Checked)
-		 {
 			SearchOptionType = SearchOption.AllDirectories;
-		 }
 		 else
 			SearchOptionType = SearchOption.TopDirectoryOnly;
 	  }
