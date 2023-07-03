@@ -1,8 +1,4 @@
 using System.Diagnostics;
-using System.Drawing;
-using System.Diagnostics.Eventing.Reader;
-using System.Windows.Forms;
-using System.Drawing.Imaging;
 
 namespace FilesDuplicatesAnalyzer
 {
