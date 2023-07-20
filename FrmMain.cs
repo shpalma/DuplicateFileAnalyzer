@@ -7,6 +7,7 @@ namespace FilesDuplicatesAnalyzer
 	  private string[] FileExtensions = { "jpg", "png" };
 	  public SearchOption SearchOptionType = SearchOption.TopDirectoryOnly;
 	  public string[] duplicatedFiles;
+	  private DuplicatesAnalyzer analyzer;
 
 	  public FrmMain()
 	  {
@@ -17,47 +18,58 @@ namespace FilesDuplicatesAnalyzer
 	  {
 		 try
 		 {
+
+			int AmountOfFiles = 0;
+
+			// max and min to set into toolstrip
+			tspbStatus.Minimum = 0;
+			tspbStatus.Minimum = 100;
+
 			using var fbd = new FolderBrowserDialog();
 			DialogResult result = fbd.ShowDialog();
-			int counter = 0;
 
 			if(result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
 			{
-			   lblFilesInFolderResult.Text = Directory.GetFiles(fbd.SelectedPath, "*.*").Length.ToString();
 
-			   // images
-			   DuplicatesAnalyzer analyzer = new();
+			   AmountOfFiles = Directory.GetFiles(fbd.SelectedPath).Length;
+
+			   analyzer = new DuplicatesAnalyzer();
+
+			   tspbStatus.Step = 5;
+
+			   // What file type is going to analyze?
 			   duplicatedFiles = analyzer.AlanyzeImages(fbd.SelectedPath, "jpg", SearchOptionType);
 
-			   // minimos y máximos de toolstrip
-			   tspbStatus.Minimum = 0;
-			   tspbStatus.Minimum = duplicatedFiles.Length;
-
+			   tspbStatus.Step = 35;
 
 			   if(duplicatedFiles.Length >= 1)
 			   {
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" {duplicatedFiles.Length} files found");
 
-				  // Ajustar automáticamente el ancho de las columnas al contenido
+				  tspbStatus.Step = 40;
+				  // Automatic adjustment of column widths to content
 				  dgvDuplicate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
-				  // Crear la columna "Número"
+				  tspbStatus.Step = 45;
+				  // Create column "N°"
 				  dgvDuplicate.Columns.Add("NumberColumn", "N°");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
 					 dgvDuplicate.Rows.Add((i + 1).ToString());
 				  }
 
-				  // Crear la columna "Nombre Original"
-				  dgvDuplicate.Columns.Add("OriginalNameColumn", "Nombre Original");
+				  tspbStatus.Step = 50;
+				  // Create column "Original Name"
+				  dgvDuplicate.Columns.Add("OriginalNameColumn", "Original Name");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
 					 string originalName = Path.GetFileName(duplicatedFiles[i].Split('|')[0]);
 					 dgvDuplicate.Rows[i].Cells["OriginalNameColumn"].Value = originalName;
 				  }
 
-				  // Crear la columna "Imagen Original"
-				  dgvDuplicate.Columns.Add("OriginalImageColumn", "Imagen Original");
+				  tspbStatus.Step = 55;
+				  // Create column "Original Image"
+				  dgvDuplicate.Columns.Add("OriginalImageColumn", "Original Image");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
 					 string originalImagePath = duplicatedFiles[i].Split('|')[0];
@@ -70,16 +82,18 @@ namespace FilesDuplicatesAnalyzer
 					 }
 				  }
 
-				  // Crear la columna "Nombre Duplicado"
-				  dgvDuplicate.Columns.Add("DuplicateNameColumn", "Nombre Duplicado");
+				  tspbStatus.Step = 60;
+				  // Create column "Duplicated Name"
+				  dgvDuplicate.Columns.Add("DuplicateNameColumn", "Duplicate Name");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
 					 string duplicateName = Path.GetFileName(duplicatedFiles[i].Split('|')[1]);
 					 dgvDuplicate.Rows[i].Cells["DuplicateNameColumn"].Value = duplicateName;
 				  }
 
-				  // Crear la columna "Imagen Duplicada"
-				  dgvDuplicate.Columns.Add("DuplicateImageColumn", "Imagen Duplicada");
+				  tspbStatus.Step = 65;
+				  // Create column "Duplicated image"
+				  dgvDuplicate.Columns.Add("DuplicateImageColumn", "Duplicate image");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
 				  {
 					 string duplicateImagePath = duplicatedFiles[i].Split('|')[1];
@@ -92,43 +106,16 @@ namespace FilesDuplicatesAnalyzer
 					 }
 				  }
 
+				  tspbStatus.Step = 70;
+				  // Resize all cells
 				  foreach(DataGridViewRow row in dgvDuplicate.Rows)
 				  {
 					 row.Height = 202;
 				  }
 
-				  //// Crear la columna "Seleccione" con checkboxes
-				  //dgvDuplicate.Columns.Add("SelectColumn", "Seleccione");
-				  //for(int i = 0; i < duplicatedFiles.Length; i++)
-				  //{
-				  //DataGridViewCheckBoxCell cell = new DataGridViewCheckBoxCell();
-				  //dgvDuplicate.Rows[i].Cells["SelectColumn"] = cell;
-				  //}
-
-				  //// Manejar el evento CellContentClick para almacenar las imágenes duplicadas seleccionadas
-				  //List<string> selectedImages = new List<string>();
-
-				  //// Manejar el evento CellValueChanged para almacenar las imágenes duplicadas seleccionadas
-				  //dgvDuplicate.CellValueChanged += (sender, e) =>
-				  //{
-				  //if(e.ColumnIndex == dgvDuplicate.Columns["SelectColumn"].Index && e.RowIndex >= 0)
-				  //{
-				  //DataGridViewCheckBoxCell cell = (DataGridViewCheckBoxCell)dgvDuplicate.Rows[e.RowIndex].Cells["SelectColumn"];
-				  //bool isChecked = (bool)cell.Value;
-
-				  //if(isChecked)
-				  //{
-				  //   string duplicateImagePath = duplicatedFiles[e.RowIndex].Split('|')[1];
-				  //   selectedImages.Add(duplicateImagePath);
-				  //}
-				  //else
-				  //{
-				  //   string duplicateImagePath = duplicatedFiles[e.RowIndex].Split('|')[1];
-				  //   selectedImages.Remove(duplicateImagePath);
-				  //}
-				  //}
-				  //};
-
+				  tspbStatus.Step = 100;
+				  lblFilesInFolderResult.Text = AmountOfFiles.ToString();
+				  lblDuplicatedFilesResult.Text = duplicatedFiles.Length.ToString();
 			   }
 			   else
 			   {
@@ -173,6 +160,54 @@ namespace FilesDuplicatesAnalyzer
 			SearchOptionType = SearchOption.AllDirectories;
 		 else
 			SearchOptionType = SearchOption.TopDirectoryOnly;
+	  }
+
+	  private void btnDDuplicated_Click(object sender, EventArgs e)
+	  {
+		 try
+		 {
+			char parentesisLeft = '(';
+			char parentesisRight = ')';
+
+			DialogResult dialogResult = MessageBox.Show("Are we going to delete duplicated files?", "Just do it!", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+			if(dialogResult == DialogResult.OK)
+			{
+			   foreach(string fileToDelete in duplicatedFiles)
+			   {
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" fileToDelete: {fileToDelete}");
+				  string[] DuplicatedFile = fileToDelete.Split("|");
+
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" 0: {DuplicatedFile[0]}");
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" 1: {DuplicatedFile[1]}");
+
+				  if(DuplicatedFile[0].Contains(parentesisLeft) && DuplicatedFile[0].Contains(parentesisRight))
+				  {
+					 if(File.Exists(DuplicatedFile[0].Trim()))
+					 {
+						File.Delete(DuplicatedFile[0].Trim());
+						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" File  {DuplicatedFile[0]} deleted");
+					 }
+				  }
+				  else if(DuplicatedFile[1].Contains(parentesisLeft) && DuplicatedFile[1].Contains(parentesisRight))
+				  {
+					 if(File.Exists(DuplicatedFile[1].Trim()))
+					 {
+						File.Delete(DuplicatedFile[1].Trim());
+						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" File  {DuplicatedFile[1]} deleted");
+					 }
+				  }
+			   }
+			}
+			else
+			{
+			   Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + " User has canceled the operation");
+			}
+		 }
+		 catch(Exception ex)
+		 {
+			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception: {ex.Message}");
+		 }
 	  }
    }
 }

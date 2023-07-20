@@ -1,26 +1,32 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace FilesDuplicatesAnalyzer
 {
    public class DuplicatesAnalyzer
    {
-
 	  public string[] AlanyzeImages(string pathFiles, string fileTypes, SearchOption searchOptionType)
 	  {
-		 if(!Directory.Exists(pathFiles))
-		 {
-			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" directorio especificado no existe: {pathFiles}");
-			throw new DirectoryNotFoundException("El directorio especificado no existe.");
-		 }
-
-		 List<string> result = new();
-
-		 Dictionary<string, string> fileHashes = new();
+		 int top = 0;
+		 int counter = 0;
+		 int fileSize = 0;
+		 
+		 top = 200;
 
 		 try
 		 {
+			if(!Directory.Exists(pathFiles))
+			{
+			   Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" selected folder doesn't exist!  {pathFiles}");
+			   throw new DirectoryNotFoundException("Selected folder doesn't exist");
+			}
+
+			List<string> result = new();
+
+			Dictionary<string, string> fileHashes = new();
+
 			string[] files;
 
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "******************************************");
@@ -46,10 +52,26 @@ namespace FilesDuplicatesAnalyzer
 
 			foreach(string file in files)
 			{
+			   if(counter >= top)
+			   {
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" :::! proccess has reached the top: {file}");
+				  break;
+			   }
+
 			   if(!File.Exists(file))
 			   {
 				  // El archivo no existe, se omite su procesamiento
-				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" :::! archivo no existe: {file}");
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" :::! file doesn't exist: {file}");
+				  continue;
+			   }
+
+			   fileSize = (int)new FileInfo(file).Length;
+
+			   // if file is les than xxx, then is not considered
+			   if(fileSize <= 512)
+			   {
+				  // El archivo no existe, se omite su procesamiento
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" :::! small file size {fileSize} (jumped)!");
 				  continue;
 			   }
 
@@ -60,29 +82,30 @@ namespace FilesDuplicatesAnalyzer
 				  string originalFile = fileHashes.FirstOrDefault(x => x.Value == fileHash).Key;
 				  result.Add(originalFile + " | " + file);
 
-				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" ::: Original: {originalFile} | Duplicado: {file}");
+				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" ::: Original: {originalFile} | Duplicated: {file}");
 			   }
 			   else
 			   {
 				  fileHashes.Add(file, fileHash);
 			   }
+			   counter += 1;
 			}
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "******************************************");
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "* Process Finished");
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "******************************************");
+
+			return result.ToArray();
 		 }
 		 catch(UnauthorizedAccessException ex)
 		 {
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception(ux): {ex.Message}");
-			throw new UnauthorizedAccessException("No se tiene acceso para leer uno o más archivos en el directorio especificado.", ex);
+			throw new UnauthorizedAccessException("Not possible to read one or more files in selected folder!", ex);
 		 }
 		 catch(Exception ex)
 		 {
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception(ex): {ex.Message}");
-			throw new Exception("Ocurrió un error al analizar las imágenes.", ex);
+			throw new Exception($"Huston: we have a problem! AlanyzeImages - {ex}");
 		 }
-
-		 return result.ToArray();
 	  }
 
 	  private string CalculateFileHash(string filePath)
@@ -100,7 +123,7 @@ namespace FilesDuplicatesAnalyzer
 			catch(Exception ex)
 			{
 			   Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception(ex): {ex.Message}");
-			   throw new Exception("Ocurrió un error al calcular el hash del archivo: " + filePath, ex);
+			   throw new Exception($"Huston: we have a problem! CalculateFileHash - {filePath} | {ex}");
 			}
 		 }
 	  }
@@ -123,7 +146,7 @@ namespace FilesDuplicatesAnalyzer
 			   if(File.Exists(file))
 			   {
 				  string hash = GetFileHash(file);
-				  duplicateFilesAndHush.Add(file + " " +  hash);
+				  duplicateFilesAndHush.Add(file + " " + hash);
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" {file + " " + hash}");
 
 				  if(!filesByHash.ContainsKey(hash))
@@ -148,7 +171,6 @@ namespace FilesDuplicatesAnalyzer
 
 		 return duplicateFiles.ToArray();
 	  }
-
 	  private string GetFileHash(string filePath)
 	  {
 		 using(var sha256 = SHA256.Create())
@@ -173,7 +195,7 @@ namespace FilesDuplicatesAnalyzer
 
 			foreach(var file in files)
 			{
-			   if (File.Exists(file))
+			   if(File.Exists(file))
 			   {
 				  string hash = GetFileHash(file);
 

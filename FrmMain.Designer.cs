@@ -28,7 +28,10 @@
 	  /// </summary>
 	  private void InitializeComponent()
 	  {
+		 System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
 		 grpbSetUp = new GroupBox();
+		 chkbFileTypeImages = new CheckBox();
+		 lblLabelFileTypeAnalyze = new Label();
 		 lblDuplicatedFilesResult = new Label();
 		 lblDuplicatedFiles = new Label();
 		 btnResetSetUp = new Button();
@@ -39,9 +42,10 @@
 		 lblSelectFolder = new Label();
 		 grpbDupFiles = new GroupBox();
 		 dgvDuplicate = new DataGridView();
-		 chkbDeleteDuplicated = new CheckBox();
 		 ssStatus = new StatusStrip();
 		 tspbStatus = new ToolStripProgressBar();
+		 btnDDuplicated = new Button();
+		 btnSetUp = new Button();
 		 grpbSetUp.SuspendLayout();
 		 grpbDupFiles.SuspendLayout();
 		 ((System.ComponentModel.ISupportInitialize)dgvDuplicate).BeginInit();
@@ -50,6 +54,8 @@
 		 // 
 		 // grpbSetUp
 		 // 
+		 grpbSetUp.Controls.Add(chkbFileTypeImages);
+		 grpbSetUp.Controls.Add(lblLabelFileTypeAnalyze);
 		 grpbSetUp.Controls.Add(lblDuplicatedFilesResult);
 		 grpbSetUp.Controls.Add(lblDuplicatedFiles);
 		 grpbSetUp.Controls.Add(btnResetSetUp);
@@ -64,6 +70,25 @@
 		 grpbSetUp.TabIndex = 0;
 		 grpbSetUp.TabStop = false;
 		 grpbSetUp.Text = "Set Up";
+		 // 
+		 // chkbFileTypeImages
+		 // 
+		 chkbFileTypeImages.AutoSize = true;
+		 chkbFileTypeImages.Location = new Point(183, 30);
+		 chkbFileTypeImages.Name = "chkbFileTypeImages";
+		 chkbFileTypeImages.Size = new Size(96, 29);
+		 chkbFileTypeImages.TabIndex = 9;
+		 chkbFileTypeImages.Text = "Images";
+		 chkbFileTypeImages.UseVisualStyleBackColor = true;
+		 // 
+		 // lblLabelFileTypeAnalyze
+		 // 
+		 lblLabelFileTypeAnalyze.AutoSize = true;
+		 lblLabelFileTypeAnalyze.Location = new Point(6, 27);
+		 lblLabelFileTypeAnalyze.Name = "lblLabelFileTypeAnalyze";
+		 lblLabelFileTypeAnalyze.Size = new Size(172, 25);
+		 lblLabelFileTypeAnalyze.TabIndex = 8;
+		 lblLabelFileTypeAnalyze.Text = "File type to analyze: ";
 		 // 
 		 // lblDuplicatedFilesResult
 		 // 
@@ -85,6 +110,8 @@
 		 // 
 		 // btnResetSetUp
 		 // 
+		 btnResetSetUp.Image = Properties.Resources.icons8_compose_bluetone_16;
+		 btnResetSetUp.ImageAlign = ContentAlignment.MiddleRight;
 		 btnResetSetUp.Location = new Point(449, 141);
 		 btnResetSetUp.Name = "btnResetSetUp";
 		 btnResetSetUp.Size = new Size(111, 33);
@@ -123,6 +150,8 @@
 		 // 
 		 // btnSelectFolder
 		 // 
+		 btnSelectFolder.Image = Properties.Resources.icons8_documents_bluetone_16;
+		 btnSelectFolder.ImageAlign = ContentAlignment.MiddleRight;
 		 btnSelectFolder.Location = new Point(332, 141);
 		 btnSelectFolder.Name = "btnSelectFolder";
 		 btnSelectFolder.Size = new Size(111, 33);
@@ -163,23 +192,13 @@
 		 dgvDuplicate.Size = new Size(894, 375);
 		 dgvDuplicate.TabIndex = 0;
 		 // 
-		 // chkbDeleteDuplicated
-		 // 
-		 chkbDeleteDuplicated.AutoSize = true;
-		 chkbDeleteDuplicated.Location = new Point(17, 704);
-		 chkbDeleteDuplicated.Name = "chkbDeleteDuplicated";
-		 chkbDeleteDuplicated.Size = new Size(184, 29);
-		 chkbDeleteDuplicated.TabIndex = 1;
-		 chkbDeleteDuplicated.Text = "Delete duplicated?";
-		 chkbDeleteDuplicated.UseVisualStyleBackColor = true;
-		 // 
 		 // ssStatus
 		 // 
 		 ssStatus.ImageScalingSize = new Size(24, 24);
 		 ssStatus.Items.AddRange(new ToolStripItem[] { tspbStatus });
-		 ssStatus.Location = new Point(0, 742);
+		 ssStatus.Location = new Point(0, 773);
 		 ssStatus.Name = "ssStatus";
-		 ssStatus.Size = new Size(930, 28);
+		 ssStatus.Size = new Size(932, 28);
 		 ssStatus.TabIndex = 2;
 		 // 
 		 // tspbStatus
@@ -187,15 +206,40 @@
 		 tspbStatus.Name = "tspbStatus";
 		 tspbStatus.Size = new Size(150, 20);
 		 // 
+		 // btnDDuplicated
+		 // 
+		 btnDDuplicated.Image = Properties.Resources.icons8_garbage_can_bluetone_16;
+		 btnDDuplicated.ImageAlign = ContentAlignment.MiddleRight;
+		 btnDDuplicated.Location = new Point(17, 704);
+		 btnDDuplicated.Name = "btnDDuplicated";
+		 btnDDuplicated.Size = new Size(193, 34);
+		 btnDDuplicated.TabIndex = 3;
+		 btnDDuplicated.Text = "Delete duplicated";
+		 btnDDuplicated.UseVisualStyleBackColor = true;
+		 btnDDuplicated.Click += btnDDuplicated_Click;
+		 // 
+		 // btnSetUp
+		 // 
+		 btnSetUp.Image = Properties.Resources.icons8_cog_bluetone_16;
+		 btnSetUp.ImageAlign = ContentAlignment.MiddleRight;
+		 btnSetUp.Location = new Point(806, 704);
+		 btnSetUp.Name = "btnSetUp";
+		 btnSetUp.Size = new Size(105, 34);
+		 btnSetUp.TabIndex = 4;
+		 btnSetUp.Text = "SetUp";
+		 btnSetUp.UseVisualStyleBackColor = true;
+		 // 
 		 // FrmMain
 		 // 
 		 AutoScaleDimensions = new SizeF(10F, 25F);
 		 AutoScaleMode = AutoScaleMode.Font;
-		 ClientSize = new Size(930, 770);
+		 ClientSize = new Size(932, 801);
+		 Controls.Add(btnSetUp);
+		 Controls.Add(btnDDuplicated);
 		 Controls.Add(ssStatus);
-		 Controls.Add(chkbDeleteDuplicated);
 		 Controls.Add(grpbDupFiles);
 		 Controls.Add(grpbSetUp);
+		 Icon = (Icon)resources.GetObject("$this.Icon");
 		 MaximizeBox = false;
 		 MinimizeBox = false;
 		 Name = "FrmMain";
@@ -223,8 +267,11 @@
 	  private Label lblDuplicatedFiles;
 	  private GroupBox grpbDupFiles;
 	  private DataGridView dgvDuplicate;
-	  private CheckBox chkbDeleteDuplicated;
 	  private StatusStrip ssStatus;
 	  private ToolStripProgressBar tspbStatus;
+	  private CheckBox chkbFileTypeImages;
+	  private Label lblLabelFileTypeAnalyze;
+	  private Button btnDDuplicated;
+	  private Button btnSetUp;
    }
 }
