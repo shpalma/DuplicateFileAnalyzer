@@ -12,7 +12,7 @@ namespace FilesDuplicatesAnalyzer
 		 int top = 0;
 		 int counter = 0;
 		 int fileSize = 0;
-		 
+
 		 top = 200;
 
 		 try
@@ -83,12 +83,12 @@ namespace FilesDuplicatesAnalyzer
 				  result.Add(originalFile + " | " + file);
 
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" ::: Original: {originalFile} | Duplicated: {file}");
+				  counter += 1;
 			   }
 			   else
 			   {
 				  fileHashes.Add(file, fileHash);
 			   }
-			   counter += 1;
 			}
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "******************************************");
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + "* Process Finished");

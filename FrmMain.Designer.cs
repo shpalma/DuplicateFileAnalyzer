@@ -182,11 +182,14 @@
 		 // dgvDuplicate
 		 // 
 		 dgvDuplicate.AllowUserToAddRows = false;
+		 dgvDuplicate.AllowUserToDeleteRows = false;
 		 dgvDuplicate.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 		 dgvDuplicate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 		 dgvDuplicate.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 		 dgvDuplicate.Location = new Point(6, 30);
+		 dgvDuplicate.MultiSelect = false;
 		 dgvDuplicate.Name = "dgvDuplicate";
+		 dgvDuplicate.ReadOnly = true;
 		 dgvDuplicate.RowHeadersWidth = 62;
 		 dgvDuplicate.RowTemplate.Height = 33;
 		 dgvDuplicate.Size = new Size(894, 375);

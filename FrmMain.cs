@@ -35,22 +35,22 @@ namespace FilesDuplicatesAnalyzer
 
 			   analyzer = new DuplicatesAnalyzer();
 
-			   tspbStatus.Step = 5;
+			   //tspbStatus.Step = 5;
 
 			   // What file type is going to analyze?
 			   duplicatedFiles = analyzer.AlanyzeImages(fbd.SelectedPath, "jpg", SearchOptionType);
 
-			   tspbStatus.Step = 35;
+			   //tspbStatus.Step = 35;
 
 			   if(duplicatedFiles.Length >= 1)
 			   {
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" {duplicatedFiles.Length} files found");
 
-				  tspbStatus.Step = 40;
+				  //tspbStatus.Step = 40;
 				  // Automatic adjustment of column widths to content
 				  dgvDuplicate.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
 
-				  tspbStatus.Step = 45;
+				  //tspbStatus.Step = 45;
 				  // Create column "N°"
 				  dgvDuplicate.Columns.Add("NumberColumn", "N°");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
@@ -58,7 +58,7 @@ namespace FilesDuplicatesAnalyzer
 					 dgvDuplicate.Rows.Add((i + 1).ToString());
 				  }
 
-				  tspbStatus.Step = 50;
+				  //tspbStatus.Step = 50;
 				  // Create column "Original Name"
 				  dgvDuplicate.Columns.Add("OriginalNameColumn", "Original Name");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
@@ -67,7 +67,7 @@ namespace FilesDuplicatesAnalyzer
 					 dgvDuplicate.Rows[i].Cells["OriginalNameColumn"].Value = originalName;
 				  }
 
-				  tspbStatus.Step = 55;
+				  //tspbStatus.Step = 55;
 				  // Create column "Original Image"
 				  dgvDuplicate.Columns.Add("OriginalImageColumn", "Original Image");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
@@ -82,7 +82,7 @@ namespace FilesDuplicatesAnalyzer
 					 }
 				  }
 
-				  tspbStatus.Step = 60;
+				  //tspbStatus.Step = 60;
 				  // Create column "Duplicated Name"
 				  dgvDuplicate.Columns.Add("DuplicateNameColumn", "Duplicate Name");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
@@ -91,7 +91,7 @@ namespace FilesDuplicatesAnalyzer
 					 dgvDuplicate.Rows[i].Cells["DuplicateNameColumn"].Value = duplicateName;
 				  }
 
-				  tspbStatus.Step = 65;
+				  //tspbStatus.Step = 65;
 				  // Create column "Duplicated image"
 				  dgvDuplicate.Columns.Add("DuplicateImageColumn", "Duplicate image");
 				  for(int i = 0; i < duplicatedFiles.Length; i++)
@@ -106,20 +106,21 @@ namespace FilesDuplicatesAnalyzer
 					 }
 				  }
 
-				  tspbStatus.Step = 70;
+				  //tspbStatus.Step = 70;
 				  // Resize all cells
 				  foreach(DataGridViewRow row in dgvDuplicate.Rows)
 				  {
 					 row.Height = 202;
 				  }
 
-				  tspbStatus.Step = 100;
+				  //tspbStatus.Step = 100;
 				  lblFilesInFolderResult.Text = AmountOfFiles.ToString();
 				  lblDuplicatedFilesResult.Text = duplicatedFiles.Length.ToString();
 			   }
 			   else
 			   {
 				  Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + " 0 files found");
+				  MessageBox.Show("Does not exist duplicated files on selected folder!", "Everything is just fine!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			   }
 			}
 		 }
@@ -168,6 +169,8 @@ namespace FilesDuplicatesAnalyzer
 		 {
 			char parentesisLeft = '(';
 			char parentesisRight = ')';
+			char underline = '_';
+			int counter = 0;
 
 			DialogResult dialogResult = MessageBox.Show("Are we going to delete duplicated files?", "Just do it!", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
@@ -186,17 +189,30 @@ namespace FilesDuplicatesAnalyzer
 					 if(File.Exists(DuplicatedFile[0].Trim()))
 					 {
 						File.Delete(DuplicatedFile[0].Trim());
+						counter += 1;
+
 						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" File  {DuplicatedFile[0]} deleted");
 					 }
 				  }
-				  else if(DuplicatedFile[1].Contains(parentesisLeft) && DuplicatedFile[1].Contains(parentesisRight))
+				  else
 				  {
 					 if(File.Exists(DuplicatedFile[1].Trim()))
 					 {
 						File.Delete(DuplicatedFile[1].Trim());
+						counter += 1;
+
 						Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" File  {DuplicatedFile[1]} deleted");
 					 }
 				  }
+			   }
+
+			   if(counter == 1)
+			   {
+				  MessageBox.Show("Does not exist duplicated files on selected folder!", "Everything is just fine!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+			   }
+			   else
+			   {
+				  MessageBox.Show($"{counter} files deleted!", "Everything is just fine!", MessageBoxButtons.OK, MessageBoxIcon.Information);
 			   }
 			}
 			else
