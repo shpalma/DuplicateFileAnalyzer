@@ -8,6 +8,8 @@ namespace FilesDuplicatesAnalyzer
 	  public SearchOption SearchOptionType = SearchOption.TopDirectoryOnly;
 	  public string[] duplicatedFiles;
 	  private DuplicatesAnalyzer analyzer;
+	  public bool MustGenerateLog = false;
+	  public bool IsLogDetailed = false;
 
 	  public FrmMain()
 	  {
@@ -19,6 +21,7 @@ namespace FilesDuplicatesAnalyzer
 		 try
 		 {
 
+			ManagementLogs logs = new ManagementLogs();
 			int AmountOfFiles = 0;
 
 			// max and min to set into toolstrip
@@ -32,10 +35,9 @@ namespace FilesDuplicatesAnalyzer
 			{
 
 			   AmountOfFiles = Directory.GetFiles(fbd.SelectedPath).Length;
+			   logs.GenerateLog($"Get the amount of files", $"{AmountOfFiles}", MustGenerateLog);
 
 			   analyzer = new DuplicatesAnalyzer();
-
-			   //tspbStatus.Step = 5;
 
 			   // What file type is going to analyze?
 			   duplicatedFiles = analyzer.AlanyzeImages(fbd.SelectedPath, "jpg", SearchOptionType);
@@ -224,6 +226,14 @@ namespace FilesDuplicatesAnalyzer
 		 {
 			Debug.WriteLine(DateTime.Now.ToString("yyyy/dd/MM HH:mm:ss") + $" Exception: {ex.Message}");
 		 }
+	  }
+
+	  private void chkbLog_CheckedChanged(object sender, EventArgs e)
+	  {
+		 if(chkbLog.Checked)
+			MustGenerateLog = true;
+		 else
+			MustGenerateLog = false;
 	  }
    }
 }

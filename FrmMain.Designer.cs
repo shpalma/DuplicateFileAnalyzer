@@ -30,6 +30,8 @@
 	  {
 		 System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
 		 grpbSetUp = new GroupBox();
+		 chkbBackup = new CheckBox();
+		 chkbLog = new CheckBox();
 		 chkbFileTypeImages = new CheckBox();
 		 lblLabelFileTypeAnalyze = new Label();
 		 lblDuplicatedFilesResult = new Label();
@@ -54,6 +56,8 @@
 		 // 
 		 // grpbSetUp
 		 // 
+		 grpbSetUp.Controls.Add(chkbBackup);
+		 grpbSetUp.Controls.Add(chkbLog);
 		 grpbSetUp.Controls.Add(chkbFileTypeImages);
 		 grpbSetUp.Controls.Add(lblLabelFileTypeAnalyze);
 		 grpbSetUp.Controls.Add(lblDuplicatedFilesResult);
@@ -70,6 +74,27 @@
 		 grpbSetUp.TabIndex = 0;
 		 grpbSetUp.TabStop = false;
 		 grpbSetUp.Text = "Set Up";
+		 // 
+		 // chkbBackup
+		 // 
+		 chkbBackup.AutoSize = true;
+		 chkbBackup.Location = new Point(331, 140);
+		 chkbBackup.Name = "chkbBackup";
+		 chkbBackup.Size = new Size(105, 29);
+		 chkbBackup.TabIndex = 11;
+		 chkbBackup.Text = "BackUp?";
+		 chkbBackup.UseVisualStyleBackColor = true;
+		 // 
+		 // chkbLog
+		 // 
+		 chkbLog.AutoSize = true;
+		 chkbLog.Location = new Point(182, 140);
+		 chkbLog.Name = "chkbLog";
+		 chkbLog.Size = new Size(76, 29);
+		 chkbLog.TabIndex = 10;
+		 chkbLog.Text = "Log?";
+		 chkbLog.UseVisualStyleBackColor = true;
+		 chkbLog.CheckedChanged += chkbLog_CheckedChanged;
 		 // 
 		 // chkbFileTypeImages
 		 // 
@@ -112,7 +137,7 @@
 		 // 
 		 btnResetSetUp.Image = Properties.Resources.icons8_compose_bluetone_16;
 		 btnResetSetUp.ImageAlign = ContentAlignment.MiddleRight;
-		 btnResetSetUp.Location = new Point(449, 141);
+		 btnResetSetUp.Location = new Point(448, 101);
 		 btnResetSetUp.Name = "btnResetSetUp";
 		 btnResetSetUp.Size = new Size(111, 33);
 		 btnResetSetUp.TabIndex = 5;
@@ -140,7 +165,7 @@
 		 // chkbSubFolders
 		 // 
 		 chkbSubFolders.AutoSize = true;
-		 chkbSubFolders.Location = new Point(183, 145);
+		 chkbSubFolders.Location = new Point(182, 105);
 		 chkbSubFolders.Name = "chkbSubFolders";
 		 chkbSubFolders.Size = new Size(132, 29);
 		 chkbSubFolders.TabIndex = 2;
@@ -152,7 +177,7 @@
 		 // 
 		 btnSelectFolder.Image = Properties.Resources.icons8_documents_bluetone_16;
 		 btnSelectFolder.ImageAlign = ContentAlignment.MiddleRight;
-		 btnSelectFolder.Location = new Point(332, 141);
+		 btnSelectFolder.Location = new Point(331, 101);
 		 btnSelectFolder.Name = "btnSelectFolder";
 		 btnSelectFolder.Size = new Size(111, 33);
 		 btnSelectFolder.TabIndex = 1;
@@ -163,7 +188,7 @@
 		 // lblSelectFolder
 		 // 
 		 lblSelectFolder.AutoSize = true;
-		 lblSelectFolder.Location = new Point(6, 145);
+		 lblSelectFolder.Location = new Point(5, 105);
 		 lblSelectFolder.Name = "lblSelectFolder";
 		 lblSelectFolder.Size = new Size(159, 25);
 		 lblSelectFolder.TabIndex = 0;
@@ -276,5 +301,7 @@
 	  private Label lblLabelFileTypeAnalyze;
 	  private Button btnDDuplicated;
 	  private Button btnSetUp;
+	  private CheckBox chkbLog;
+	  private CheckBox chkbBackup;
    }
 }
